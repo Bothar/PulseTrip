@@ -15,12 +15,13 @@ public class Player extends GameObject {
 
     private Bitmap spritesheet;
     private int score;
-    private double dy;
+    private double dy, dx;
     private boolean playing;
     private boolean jump;
-    private boolean slide;
+    private boolean slide=false;
     private Animation animation = new Animation();
     private long startTIme;
+    private boolean newAnim;
 
     public Player(Bitmap res, int w, int h, int numFrames){
         x = 50;
@@ -45,10 +46,13 @@ public class Player extends GameObject {
 
     public void setJump(boolean b){
         jump = b;
+        newAnim = true;
     }
 
     public void setSlide(boolean b){
         slide = b;
+        y+=16;
+        dx = 0;
     }
 
     public void update(){
@@ -66,13 +70,24 @@ public class Player extends GameObject {
 
         if (dy > 10){
             jump = false;
+
         }
         if (!jump && dy>0){
             y+=10;
             dy--;
         }
-
-
+        if (dy == 0 && newAnim){
+            setBitmap(spritesheet, 75, 79, 10);
+            newAnim = false;
+        }
+        if (slide){
+            dx += 1;
+            if (dx > 19){
+                slide = false;
+                y-=16;
+                setBitmap(spritesheet, 75, 79, 10);
+            }
+        }
     }
 
     public void draw(Canvas canvas){
@@ -100,7 +115,7 @@ public class Player extends GameObject {
         Bitmap[] image = new Bitmap[numFrames];
 
         for (int i = 0; i<image.length; i++){
-            image[i] = Bitmap.createBitmap(res, i*width, 0, width, height);
+            image[i] = Bitmap.createBitmap(res, i*w, 0, w, h);
         }
 
         animation.setFrames(image);
@@ -111,6 +126,8 @@ public class Player extends GameObject {
         return dy != 0;
     }
 
-
+    public boolean getSliding(){
+        return slide;
+    }
 
 }

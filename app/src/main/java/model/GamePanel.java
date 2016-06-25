@@ -3,6 +3,7 @@ package model;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,6 +18,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     public static final int WIDTH = 720;
     public static final int HEIGHT = 360;
     public static final int MOVEMENT_SPEED= -1;
+    float downY , upY;
     private MainThread thread;
     private Background bg;
     private Player player;
@@ -65,34 +67,46 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event){
+    public boolean onTouchEvent(MotionEvent event) {
+        final int MIN_DISTANCE = 50;
+        int action = event.getActionMasked();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                downY = event.getY();
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN){
-            if (!player.getPlaying()){
-                player.setPlaying(true);
-            }
-            else{
-                if (!player.getJumping()){
-                    player.setJump(true);
-                    player.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.jump_boy), 65, 86, 10);
+                return true;
+
+            case MotionEvent.ACTION_UP:
+                if (!player.getPlaying()){
+                    player.setPlaying(true);
                 }
+                upY = event.getY();
 
-            }
-            return true;
-        }
+                float deltaY = downY - upY;
 
-        /*if (event.getAction() == MotionEvent.ACTION_UP){
-            player.setJump(false);
-            player.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.run_boy), 65, 86, 10);
-            return true;
-        }*/
-        return super.onTouchEvent(event);
+
+
+                if (Math.abs(deltaY) > MIN_DISTANCE) {
+
+                    if (deltaY < 0) {
+                        this.onTopToBottomSwipe();
+                        return true;
+                    }
+                    if (deltaY > 0) {
+                        this.onBottomToTopSwipe();
+                        return true;
+                    }
+                }
+                break;
+
+        }return super.onTouchEvent(event);
     }
 
     public void update(){
             if (player.getPlaying()){
                 bg.update();
                 player.update();
+
             }
     }
 
@@ -112,5 +126,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         }
 
     }
+    private void onTopToBottomSwipe(){
+        if (!player.getSliding() && !player.getJumping()){
+            player.setSlide(true);
+            player.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.slide_boy), 75, 70, 10);
+        }
+    }
 
+
+    private void onBottomToTopSwipe(){
+        if (!player.getJumping() && !player.getSliding()){
+            player.setJump(true);
+            player.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.jump_boy), 75, 86, 10);
+        }
+    }
 }
+
+
