@@ -8,6 +8,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import edu.ub.pis2016.dmiguel.pulsetrip.R;
 
 /**
@@ -17,16 +20,19 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public static final int WIDTH = 720;
     public static final int HEIGHT = 360;
-    public static final int MOVEMENT_SPEED= -1;
+    public static final int MOVEMENT_SPEED= -10;
     float downY , upY;
     private MainThread thread;
     private Background bg;
     private Player player;
+    private ArrayList<Obstacle> obstacles;
+    private int[] obstacle_res = {R.drawable.crate, R.drawable.stone, R.drawable.tree_1};
 
 
     public GamePanel(Context context){
         super(context);
 
+        obstacles = new ArrayList<>();
         //Add the callback to the surfaceholder to intercept events
         getHolder().addCallback(this);
 
@@ -106,6 +112,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             if (player.getPlaying()){
                 bg.update();
                 player.update();
+                updateObstacles();
+
 
             }
     }
@@ -121,6 +129,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             canvas.scale(scaleFacotorX, scaleFactorY);
             bg.draw(canvas);
             player.draw(canvas);
+            for (int i=0; i<obstacles.size();i++){
+                obstacles.get(i).draw(canvas);
+            }
             canvas.restoreToCount(savedState);
 
         }
@@ -138,6 +149,22 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         if (!player.getJumping() && !player.getSliding()){
             player.setJump(true);
             player.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.jump_boy), 75, 86, 10);
+        }
+    }
+
+    private void updateObstacles(){
+        if (obstacles.size() < 3){
+            if (obstacles.isEmpty() || (obstacles.get(obstacles.size()-1).getX() < GamePanel.WIDTH-300) /*&& (new Random().nextInt(25) == 0)*/){
+                int next = new Random().nextInt(3);
+                obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[next]), 40, 40));
+            }
+        }
+
+        for (int i=0; i<obstacles.size();i++){
+            obstacles.get(i).update();
+            if (obstacles.get(i).getX() < -obstacles.get(i).getHeight()){
+                obstacles.remove(i);
+            }
         }
     }
 }

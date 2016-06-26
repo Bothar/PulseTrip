@@ -82,7 +82,7 @@ public class Player extends GameObject {
         }
         if (slide){
             dx += 1;
-            if (dx > 19){
+            if (dx > 12){
                 slide = false;
                 y-=16;
                 setBitmap(spritesheet, 75, 79, 10);
