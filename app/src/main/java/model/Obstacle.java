@@ -12,7 +12,7 @@ public class Obstacle extends GameObject {
     public static int number_of_obstacles = 0;
     private boolean scored = false;
 
-    public Obstacle(Bitmap res, int w, int h, boolean low) {
+    public Obstacle(Bitmap res, int w, int h,int speed, boolean low) {
         this.res = res;
         x = GamePanel.WIDTH;
         if (low) y = GamePanel.HEIGHT - 85;
@@ -21,7 +21,7 @@ public class Obstacle extends GameObject {
         }
         height = h;
         width = w;
-        dx = -10;
+        dx = speed;
         number_of_obstacles++;
     }
 
@@ -47,6 +47,14 @@ public class Obstacle extends GameObject {
 
     public void setScored(){
         scored = true;
+    }
+
+    public int getSpeed(){
+        return dx;
+    }
+
+    public void decSpeed(){
+        if (dx < -10) dx++;
     }
 
 }

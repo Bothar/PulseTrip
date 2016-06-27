@@ -24,11 +24,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public static final int WIDTH = 720;
     public static final int HEIGHT = 360;
+    int speed = -10;
     float downY , upY;
     private MainThread thread;
     private Background bg;
     private Player player;
     private ArrayList<Obstacle> obstacles;
+    private ArrayList<BonusItem> bonus;
     private int[] obstacle_res = {R.drawable.stone, R.drawable.tree_1, R.drawable.saw};
 
 
@@ -36,6 +38,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         super(context);
 
         obstacles = new ArrayList<>();
+        bonus = new ArrayList<>();
         //Add the callback to the surfaceholder to intercept events
         getHolder().addCallback(this);
 
@@ -137,6 +140,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             for (Obstacle o : obstacles){
                 o.draw(canvas);
             }
+            for (BonusItem b: bonus){
+                b.draw(canvas);
+            }
             drawScore(canvas);
             canvas.restoreToCount(savedState);
 
@@ -163,27 +169,27 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private void updateObstacles() {
         //Generating obstacles
         if (obstacles.size() < 4) {
-            if (obstacles.isEmpty() || (obstacles.get(obstacles.size() - 1).getX() < GamePanel.WIDTH - 200 && (new Random().nextInt(10) == 0))) {
+            if (obstacles.isEmpty() || (obstacles.get(obstacles.size() - 1).getX() < GamePanel.WIDTH - 300 && (new Random().nextInt(10) == 0))) {
                 int next = new Random().nextInt(4);
                 switch (next) {
                     case 0:
-                        obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[next]), 67, 40, true));
+                        obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[next]), 67, 40,speed, true));
                         break;
                     case 1:
-                        obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[next]), 98, 40, true));
+                        obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[next]), 98, 40,speed, true));
                         break;
                     default:
-                        obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[2]), 40, 40, false));
+                        obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[2]), 40, 40,speed, false));
                         break;
                 }
 
             }
         }
 
-        //Removing obstacles out of screen
+
         for (int i = 0; i < obstacles.size(); i++) {
             obstacles.get(i).update();
-
+            //Removing obstacles out of screen
             if (obstacles.get(i).getX() < -obstacles.get(i).getWidth()) {
                 obstacles.remove(i);
             }
@@ -194,19 +200,62 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             } else if (obstacles.get(i).getX() < player.getX() && !obstacles.get(i).getScored()) {
                 player.incScore();
                 obstacles.get(i).setScored();
+                //Every time we score a point we have 20% to generate a bonus item
+                if (new Random().nextInt(20)==0){
+                    bonus.add(new BonusItem(BitmapFactory.decodeResource(getResources(), R.drawable.mushroom_1), 20, 20,speed));
+                    //Making sure the bonus item is not over an obstacle
+                    for (Obstacle o: obstacles){
+                        while (collisionObjects(bonus.get(bonus.size() - 1), o)){
+                            bonus.remove(bonus.size()-1);
+                            bonus.add(new BonusItem(BitmapFactory.decodeResource(getResources(), R.drawable.mushroom_1), 20, 20, speed));
+                        }
+                    }
+                }
                 //Incrementing speed
                 if (player.getScore()%10 == 0){
+                    if (speed > -20) speed--;
                     for (Obstacle o : obstacles){
                         o.incSpeed();
+                    }
+                    for (BonusItem b : bonus){
+                        b.incSpeed();
                     }
                     bg.incSpeed();
                 }
             }
         }
+        for (int i = 0; i < bonus.size(); i++) {
+             bonus.get(i).update();
+
+             if (bonus.get(i).getX() < -bonus.get(i).getWidth()) {
+                bonus.remove(i);
+            }
+
+            if (collision(bonus.get(i), player)) {
+                bonus.remove(i);
+                if (speed < -10) speed ++;
+
+                for (Obstacle o : obstacles){
+                    o.decSpeed();
+                }
+                for (BonusItem b : bonus){
+                    b.decSpeed();
+                }
+                bg.decSpeed();
+            }
+
+        }
     }
 
-    private boolean collision(Obstacle obstacle, Player player) {
-        if (Rect.intersects(obstacle.getRectangle(), player.getRectangle())){
+    private boolean collision(GameObject object, Player player) {
+        if (Rect.intersects(object.getRectangle(), player.getRectangle())){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean collisionObjects(GameObject object, GameObject object2) {
+        if (Rect.intersects(object.getRectangle(), player.getRectangle())){
             return true;
         }
         return false;
@@ -214,8 +263,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public void newGame(){
 
+        //reset speed
+        speed = -10;
         //Clean all obstacles
         obstacles.clear();
+        bonus.clear();
         //Reset the background
         bg = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.background));
         //Reset the Player

@@ -35,6 +35,10 @@ public class Background {
         if (dx > -20) dx--;
     }
 
+    public void decSpeed(){
+        if (dx < -10) dx++;
+    }
+
 
 
 
