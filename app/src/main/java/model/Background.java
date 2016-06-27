@@ -12,7 +12,7 @@ public class Background {
 
     public Background(Bitmap res){
         image = res;
-        dx = GamePanel.MOVEMENT_SPEED;
+        dx =-10;
     }
 
     public void update(){
@@ -30,6 +30,12 @@ public class Background {
             canvas.drawBitmap(image, x+GamePanel.WIDTH, y, null);
         }
     }
+
+    public void incSpeed(){
+        if (dx > -20) dx--;
+    }
+
+
 
 
 }

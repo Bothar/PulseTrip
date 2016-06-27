@@ -58,7 +58,6 @@ public class Player extends GameObject {
     public void update(){
         long elapsed = (System.nanoTime()-startTIme)/1000000;
         if (elapsed > 100){
-            score++;
             startTIme = System.nanoTime();
         }
         animation.update();
@@ -98,6 +97,10 @@ public class Player extends GameObject {
 
     public int getScore(){
         return score;
+    }
+
+    public void incScore(){
+        score++;
     }
 
     public boolean getPlaying(){

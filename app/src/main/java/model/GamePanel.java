@@ -3,7 +3,10 @@ package model;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -21,7 +24,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public static final int WIDTH = 720;
     public static final int HEIGHT = 360;
-    public static final int MOVEMENT_SPEED= -10;
     float downY , upY;
     private MainThread thread;
     private Background bg;
@@ -36,8 +38,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         obstacles = new ArrayList<>();
         //Add the callback to the surfaceholder to intercept events
         getHolder().addCallback(this);
-
-        thread = new MainThread(getHolder(), this);
 
         //make gamepanel focusable so it can handle events
         setFocusable(true);
@@ -58,6 +58,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
             }catch(InterruptedException e){e.printStackTrace();}
             retry = false;
+            thread = null;
 
         }
     }
@@ -69,6 +70,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         player = new Player(BitmapFactory.decodeResource(getResources(), R.drawable.run_boy), 75, 79, 10);
         player.setDimensions(65, 79);
         //We can start the game loop
+        thread = new MainThread(getHolder(), this);
         thread.setRunning(true);
         thread.start();
 
@@ -117,6 +119,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 updateObstacles();
 
 
+
             }
     }
 
@@ -131,12 +134,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             canvas.scale(scaleFacotorX, scaleFactorY);
             bg.draw(canvas);
             player.draw(canvas);
-            /*for (int i=0; i<obstacles.size();i++){
-                obstacles.get(i).draw(canvas);
-            }*/
             for (Obstacle o : obstacles){
                 o.draw(canvas);
             }
+            drawScore(canvas);
             canvas.restoreToCount(savedState);
 
         }
@@ -159,11 +160,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         }
     }
 
-    private void updateObstacles(){
-        if (obstacles.size() < 3){
-            if (obstacles.isEmpty() || (obstacles.get(obstacles.size()-1).getX() < GamePanel.WIDTH-300) /*&& (new Random().nextInt(25) == 0)*/){
+    private void updateObstacles() {
+        //Generating obstacles
+        if (obstacles.size() < 4) {
+            if (obstacles.isEmpty() || (obstacles.get(obstacles.size() - 1).getX() < GamePanel.WIDTH - 200 && (new Random().nextInt(10) == 0))) {
                 int next = new Random().nextInt(4);
-                switch(next){
+                switch (next) {
                     case 0:
                         obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[next]), 67, 40, true));
                         break;
@@ -178,14 +180,27 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             }
         }
 
-        for (int i=0; i<obstacles.size();i++){
+        //Removing obstacles out of screen
+        for (int i = 0; i < obstacles.size(); i++) {
             obstacles.get(i).update();
-            if (obstacles.get(i).getX() < -obstacles.get(i).getWidth()){
+
+            if (obstacles.get(i).getX() < -obstacles.get(i).getWidth()) {
                 obstacles.remove(i);
             }
-            if (collision(obstacles.get(i), player)){
+            //Checking collision
+            if (collision(obstacles.get(i), player)) {
                 newGame();
                 break;
+            } else if (obstacles.get(i).getX() < player.getX() && !obstacles.get(i).getScored()) {
+                player.incScore();
+                obstacles.get(i).setScored();
+                //Incrementing speed
+                if (player.getScore()%10 == 0){
+                    for (Obstacle o : obstacles){
+                        o.incSpeed();
+                    }
+                    bg.incSpeed();
+                }
             }
         }
     }
@@ -198,14 +213,28 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     public void newGame(){
+
         //Clean all obstacles
         obstacles.clear();
+        //Reset the background
+        bg = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.background));
         //Reset the Player
         player = new Player(BitmapFactory.decodeResource(getResources(), R.drawable.run_boy), 75, 79, 10);
         player.setDimensions(65, 79);
         player.setPlaying(false);
 
         //show score and restart menu
+
+
+    }
+
+    private void drawScore(Canvas canvas){
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setTextSize(50);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        canvas.drawText(String.valueOf(player.getScore()),WIDTH/2, 100, paint);
+
     }
 }
 
