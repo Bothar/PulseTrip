@@ -78,6 +78,7 @@ public class Player extends GameObject {
         }
         if (dy == 0 && newAnim){
             setBitmap(spritesheet, 75, 79, 10);
+            setDimensions(65,79);
             newAnim = false;
         }
         if (slide){
@@ -86,6 +87,7 @@ public class Player extends GameObject {
                 slide = false;
                 y-=16;
                 setBitmap(spritesheet, 75, 79, 10);
+                setDimensions(65,79);
             }
         }
     }
@@ -128,6 +130,11 @@ public class Player extends GameObject {
 
     public boolean getSliding(){
         return slide;
+    }
+
+    public void setDimensions(int h, int w){
+        height = h;
+        width = w;
     }
 
 }

@@ -3,6 +3,7 @@ package model;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -26,7 +27,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private Background bg;
     private Player player;
     private ArrayList<Obstacle> obstacles;
-    private int[] obstacle_res = {R.drawable.crate, R.drawable.stone, R.drawable.tree_1};
+    private int[] obstacle_res = {R.drawable.stone, R.drawable.tree_1, R.drawable.saw};
 
 
     public GamePanel(Context context){
@@ -66,6 +67,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         bg = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.background));
         player = new Player(BitmapFactory.decodeResource(getResources(), R.drawable.run_boy), 75, 79, 10);
+        player.setDimensions(65, 79);
         //We can start the game loop
         thread.setRunning(true);
         thread.start();
@@ -129,8 +131,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             canvas.scale(scaleFacotorX, scaleFactorY);
             bg.draw(canvas);
             player.draw(canvas);
-            for (int i=0; i<obstacles.size();i++){
+            /*for (int i=0; i<obstacles.size();i++){
                 obstacles.get(i).draw(canvas);
+            }*/
+            for (Obstacle o : obstacles){
+                o.draw(canvas);
             }
             canvas.restoreToCount(savedState);
 
@@ -141,6 +146,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         if (!player.getSliding() && !player.getJumping()){
             player.setSlide(true);
             player.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.slide_boy), 75, 70, 10);
+            player.setDimensions(65, 70);
         }
     }
 
@@ -149,23 +155,57 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         if (!player.getJumping() && !player.getSliding()){
             player.setJump(true);
             player.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.jump_boy), 75, 86, 10);
+            player.setDimensions(65,70);
         }
     }
 
     private void updateObstacles(){
         if (obstacles.size() < 3){
             if (obstacles.isEmpty() || (obstacles.get(obstacles.size()-1).getX() < GamePanel.WIDTH-300) /*&& (new Random().nextInt(25) == 0)*/){
-                int next = new Random().nextInt(3);
-                obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[next]), 40, 40));
+                int next = new Random().nextInt(4);
+                switch(next){
+                    case 0:
+                        obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[next]), 67, 40, true));
+                        break;
+                    case 1:
+                        obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[next]), 98, 40, true));
+                        break;
+                    default:
+                        obstacles.add(new Obstacle(BitmapFactory.decodeResource(getResources(), obstacle_res[2]), 40, 40, false));
+                        break;
+                }
+
             }
         }
 
         for (int i=0; i<obstacles.size();i++){
             obstacles.get(i).update();
-            if (obstacles.get(i).getX() < -obstacles.get(i).getHeight()){
+            if (obstacles.get(i).getX() < -obstacles.get(i).getWidth()){
                 obstacles.remove(i);
             }
+            if (collision(obstacles.get(i), player)){
+                newGame();
+                break;
+            }
         }
+    }
+
+    private boolean collision(Obstacle obstacle, Player player) {
+        if (Rect.intersects(obstacle.getRectangle(), player.getRectangle())){
+            return true;
+        }
+        return false;
+    }
+
+    public void newGame(){
+        //Clean all obstacles
+        obstacles.clear();
+        //Reset the Player
+        player = new Player(BitmapFactory.decodeResource(getResources(), R.drawable.run_boy), 75, 79, 10);
+        player.setDimensions(65, 79);
+        player.setPlaying(false);
+
+        //show score and restart menu
     }
 }
 

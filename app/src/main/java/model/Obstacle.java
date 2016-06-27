@@ -8,13 +8,16 @@ import android.graphics.Canvas;
  */
 public class Obstacle extends GameObject {
 
-    Bitmap res;
+    private Bitmap res;
     public static int number_of_obstacles = 0;
 
-    public Obstacle(Bitmap res, int w, int h){
+    public Obstacle(Bitmap res, int w, int h, boolean low){
         this.res = res;
         x=GamePanel.WIDTH;
-        y = GamePanel.HEIGHT-85;
+        if (low) y = GamePanel.HEIGHT-85;
+        else {
+            y = GamePanel.HEIGHT-155;
+        }
         height = h;
         width = w;
         dx = GamePanel.MOVEMENT_SPEED;
@@ -28,8 +31,9 @@ public class Obstacle extends GameObject {
 
     public void update(){
         x+=dx;
-        if (x > -height){
+        if (x > -width){
             number_of_obstacles--;
         }
     }
+
 }

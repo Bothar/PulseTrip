@@ -29,16 +29,15 @@ public abstract class GameObject {
         return y;
     }
 
-    public int getWidth(){
-        return width;
-    }
+    public int getWidth(){return width;}
+
 
     public int getHeight(){
         return height;
     }
 
     public Rect getRectangle(){
-        return new Rect(x, y, x+width, y+height);
+        return new Rect(x, y, x+width-20, y+height);
     }
 
 }
