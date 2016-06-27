@@ -1,6 +1,7 @@
 package model;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -32,6 +33,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private ArrayList<Obstacle> obstacles;
     private ArrayList<BonusItem> bonus;
     private int[] obstacle_res = {R.drawable.stone, R.drawable.tree_1, R.drawable.saw};
+    private int best_score;
 
 
     public GamePanel(Context context){
@@ -39,6 +41,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         obstacles = new ArrayList<>();
         bonus = new ArrayList<>();
+        best_score = getScore();
         //Add the callback to the surfaceholder to intercept events
         getHolder().addCallback(this);
 
@@ -263,6 +266,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public void newGame(){
 
+        if (player.getScore() > best_score){
+            best_score = player.getScore();
+            setScore(best_score);
+        }
         //reset speed
         speed = -10;
         //Clean all obstacles
@@ -285,8 +292,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         paint.setColor(Color.RED);
         paint.setTextSize(50);
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        canvas.drawText(String.valueOf(player.getScore()),WIDTH/2, 100, paint);
+        canvas.drawText(String.valueOf(player.getScore()), WIDTH / 2, 100, paint);
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(30);
+        canvas.drawText( "Best: " + best_score,20, HEIGHT-20, paint);
 
+    }
+
+    public int getScore() {
+        SharedPreferences pref = getContext().getSharedPreferences("MY_PREFS", Context.MODE_PRIVATE);
+        return pref.getInt("SCORE", 0);
+    }
+
+    public void setScore(int score) {
+        SharedPreferences pref = getContext().getSharedPreferences("MY_PREFS", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt("SCORE", score);
+        editor.commit();
     }
 }
 

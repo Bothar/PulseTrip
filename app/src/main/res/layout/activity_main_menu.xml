@@ -7,7 +7,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background_menu"
     tools:context="edu.ub.pis2016.dmiguel.MainMenuActivity">
+
     
     <TextView
         android:layout_width="wrap_content"
@@ -15,7 +17,9 @@
         android:id="@+id/title"
         android:text="@string/title"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_title"
         android:textSize="@dimen/title_size"
+        android:textColor="#00CCFF"
         />
 
     <TextView
@@ -24,11 +28,18 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignTop="@+id/title"
-        android:layout_marginTop="@dimen/margin_title"
-        android:text="@string/play_btn"
-        android:textSize="@dimen/btn_size"
-        android:background="@drawable/button_limits"
-        android:padding="10dp"
+        android:layout_marginTop="@dimen/margin_button"
+        android:background="@drawable/button_play"/>
+
+    <TextView
+        android:id="@+id/option_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/play_btn"
+        android:layout_marginTop="@dimen/margin_button_top"
+        android:background="@drawable/button_options"
+
 
         />
 

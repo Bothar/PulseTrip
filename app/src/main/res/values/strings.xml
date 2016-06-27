@@ -2,4 +2,6 @@
     <string name="app_name">PulseTrip</string>
     <string name="title">Pulse Trip</string>
     <string name="play_btn">Play</string>
+    <string name="reset">Delete Score</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 </resources>

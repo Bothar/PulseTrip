@@ -3,6 +3,11 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="title_size">50dp</dimen>
-    <dimen name="margin_title">150dp</dimen>
+    <dimen name="text_size">30dp</dimen>
+    <dimen name="margin_title">50dp</dimen>
+    <dimen name="margin_button">100dp</dimen>
+    <dimen name="margin_button_small">20dp</dimen>
+    <dimen name="margin_button_top">75dp</dimen>
     <dimen name="btn_size">25dp</dimen>
+    <dimen name="small_padding">10dp</dimen>
 </resources>
