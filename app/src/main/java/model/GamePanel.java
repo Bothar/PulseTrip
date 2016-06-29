@@ -1,5 +1,7 @@
 package model;
 
+import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -8,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -17,6 +20,9 @@ import android.view.SurfaceView;
 import java.util.ArrayList;
 import java.util.Random;
 
+import activities.FinalDialog;
+import activities.GameActivity;
+import activities.PauseDialog;
 import edu.ub.pis2016.dmiguel.pulsetrip.R;
 
 /**
@@ -35,10 +41,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private ArrayList<BonusItem> bonus;
     private int[] obstacle_res = {R.drawable.stone, R.drawable.tree_1, R.drawable.saw};
     private int best_score;
+    GameActivity activity;
 
 
     public GamePanel(Context context){
         super(context);
+        activity = (GameActivity) context;
 
         obstacles = new ArrayList<>();
         bonus = new ArrayList<>();
@@ -146,6 +154,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 b.draw(canvas);
             }
             drawScore(canvas);
+            if (!player.getPlaying()) drawInfo(canvas);
             canvas.restoreToCount(savedState);
 
         }
@@ -269,6 +278,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             best_score = player.getScore();
             setScore(best_score);
         }
+
+        //show score and restart menu
+        activity.onGameFinished(player.getScore());
+
         //reset speed
         speed = -10;
         //Clean all obstacles
@@ -281,7 +294,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         player.setDimensions(65, 79);
         player.setPlaying(false);
 
-        //show score and restart menu
 
 
     }
@@ -294,7 +306,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         canvas.drawText(String.valueOf(player.getScore()), WIDTH / 2, 100, paint);
         paint.setColor(Color.BLACK);
         paint.setTextSize(30);
-        canvas.drawText( "Best: " + best_score,20, HEIGHT-20, paint);
+        canvas.drawText("Best: " + best_score, 20, HEIGHT - 20, paint);
+
+    }
+
+    private void drawInfo(Canvas canvas){
+        Paint paint = new Paint();
+        paint.setTextSize(50);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        canvas.drawText("PRESS TO START", WIDTH/2 - 200, HEIGHT / 2, paint);
+        paint.setColor(Color.BLACK);
+
 
     }
 

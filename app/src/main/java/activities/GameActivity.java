@@ -7,8 +7,9 @@ import android.os.Bundle;
 
 import edu.ub.pis2016.dmiguel.pulsetrip.R;
 import model.GamePanel;
+import model.NoticeDialogListener;
 
-public class GameActivity extends Activity implements PauseDialog.NoticeDialogListener {
+public class GameActivity extends Activity implements NoticeDialogListener {
 
 
     private GamePanel game;
@@ -36,11 +37,6 @@ public class GameActivity extends Activity implements PauseDialog.NoticeDialogLi
     }
 
     @Override
-    public void onDialogPlayClick(DialogFragment dialog){
-        game.setPlaying(true);
-    }
-
-    @Override
     public void onDialogReplayClick(DialogFragment dialog){
         game.newGame();
     }
@@ -48,6 +44,17 @@ public class GameActivity extends Activity implements PauseDialog.NoticeDialogLi
     @Override
     public void onDialogExitClick(DialogFragment dialog){
         finish();
+
+    }
+
+
+    public void onGameFinished(int score){
+        Bundle data = new Bundle();
+        data.putInt("score", (score));
+        DialogFragment dialog = new FinalDialog();
+        dialog.setCancelable(false);
+        dialog.setArguments(data);
+        dialog.show(getFragmentManager(),"");
 
     }
 
