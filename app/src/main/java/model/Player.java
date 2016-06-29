@@ -1,11 +1,7 @@
 package model;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-
-import edu.ub.pis2016.dmiguel.pulsetrip.R;
 
 
 /**

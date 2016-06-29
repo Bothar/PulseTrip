@@ -9,6 +9,7 @@ public interface NoticeDialogListener {
 
         void onDialogReplayClick(DialogFragment dialog);
         void onDialogExitClick(DialogFragment dialog);
+        void onSoundClick(DialogFragment dialog);
 
 
 }

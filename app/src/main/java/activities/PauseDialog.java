@@ -60,9 +60,10 @@ public class PauseDialog extends DialogFragment {
         playBtn = (TextView) view.findViewById(R.id.play_btn);
         resetBtn = (TextView) view.findViewById(R.id.reset_btn);
         exitBtn = (TextView) view.findViewById(R.id.exit_btn);
+
     }
 
-    private void initListeners(){
+    private void initListeners() {
 
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +86,4 @@ public class PauseDialog extends DialogFragment {
             }
         });
     }
-
-
 }

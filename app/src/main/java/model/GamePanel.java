@@ -1,7 +1,4 @@
 package model;
-
-import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -10,19 +7,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
 import java.util.ArrayList;
 import java.util.Random;
-
-import activities.FinalDialog;
 import activities.GameActivity;
-import activities.PauseDialog;
 import edu.ub.pis2016.dmiguel.pulsetrip.R;
 
 /**
@@ -104,6 +94,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             case MotionEvent.ACTION_UP:
                 if (!player.getPlaying()){
                     player.setPlaying(true);
+                    activity.onPlaying();
                 }
                 upY = event.getY();
 

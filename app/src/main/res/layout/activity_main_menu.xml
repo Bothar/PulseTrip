@@ -22,8 +22,8 @@
         android:id="@+id/play_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignTop="@+id/title"
+        android:layout_marginLeft="200dp"
+        android:layout_below="@+id/title"
         android:layout_marginTop="@dimen/margin_button"
         android:background="@drawable/button_play"/>
 
@@ -32,10 +32,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignTop="@+id/play_btn"
-        android:layout_marginTop="@dimen/margin_button_top"
-        android:background="@drawable/button_options"
+        android:layout_toRightOf="@id/play_btn"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="@dimen/margin_button"
+        android:background="@drawable/button_options" />
 
+    <TextView
+        android:id="@+id/music_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@id/option_btn"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="@dimen/margin_button"
+        android:background="@drawable/btn_music"
 
         />
 
