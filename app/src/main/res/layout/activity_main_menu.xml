@@ -22,7 +22,7 @@
         android:id="@+id/play_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="200dp"
+        android:layout_marginLeft="175dp"
         android:layout_below="@+id/title"
         android:layout_marginTop="@dimen/margin_button"
         android:background="@drawable/button_play"/>
@@ -38,11 +38,23 @@
         android:background="@drawable/button_options" />
 
     <TextView
-        android:id="@+id/music_btn"
+        android:id="@+id/help_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_toRightOf="@id/option_btn"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="@dimen/margin_button"
+        android:background="@drawable/btn_help"
+
+        />
+
+    <TextView
+        android:id="@+id/music_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@id/help_btn"
         android:layout_below="@+id/title"
         android:layout_marginTop="@dimen/margin_button"
         android:background="@drawable/btn_music"

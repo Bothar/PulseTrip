@@ -17,6 +17,7 @@ public class MainMenuActivity extends Activity {
     private TextView playBtn;
     private TextView optionBtn;
     private TextView soundBtn;
+    private TextView helpBtn;
     private boolean sound;
 
     @Override
@@ -36,6 +37,7 @@ public class MainMenuActivity extends Activity {
         playBtn = (TextView) findViewById(R.id.play_btn);
         optionBtn = (TextView) findViewById(R.id.option_btn);
         soundBtn = (TextView) findViewById(R.id.music_btn);
+        helpBtn = (TextView) findViewById(R.id.help_btn);
 
         sound = getSound();
 
@@ -58,6 +60,13 @@ public class MainMenuActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainMenuActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+        helpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent((MainMenuActivity.this), HelpActivity.class);
                 startActivity(intent);
             }
         });

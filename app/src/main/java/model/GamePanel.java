@@ -82,9 +82,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        final int MIN_DISTANCE = 50;
-        int action = event.getActionMasked();
+        public boolean onTouchEvent(MotionEvent event) {
+            final int MIN_DISTANCE = 50;
+            int action = event.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 downY = event.getY();
