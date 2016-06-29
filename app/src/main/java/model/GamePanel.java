@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -124,8 +125,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 player.update();
                 updateObstacles();
 
-
-
             }
     }
 
@@ -207,7 +206,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 if (new Random().nextInt(20)==0){
                     bonus.add(new BonusItem(BitmapFactory.decodeResource(getResources(), R.drawable.mushroom_1), 20, 20,speed));
                     //Making sure the bonus item is not over an obstacle
-                    for (Obstacle o: obstacles){
+                   for (Obstacle o: obstacles){
                         while (collisionObjects(bonus.get(bonus.size() - 1), o)){
                             bonus.remove(bonus.size()-1);
                             bonus.add(new BonusItem(BitmapFactory.decodeResource(getResources(), R.drawable.mushroom_1), 20, 20, speed));
@@ -258,7 +257,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     private boolean collisionObjects(GameObject object, GameObject object2) {
-        if (Rect.intersects(object.getRectangle(), player.getRectangle())){
+        if (Rect.intersects(object.getRectangle(), object2.getRectangle())){
             return true;
         }
         return false;
@@ -310,6 +309,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         editor.putInt("SCORE", score);
         editor.commit();
     }
+
+    public void setPlaying(boolean b){
+        player.setPlaying(b);
+    }
+
+
 }
 
 

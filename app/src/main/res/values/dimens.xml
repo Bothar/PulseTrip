@@ -9,5 +9,6 @@
     <dimen name="margin_button_small">20dp</dimen>
     <dimen name="margin_button_top">75dp</dimen>
     <dimen name="btn_size">25dp</dimen>
+    <dimen name="btn_size_pause">50dp</dimen>
     <dimen name="small_padding">10dp</dimen>
 </resources>

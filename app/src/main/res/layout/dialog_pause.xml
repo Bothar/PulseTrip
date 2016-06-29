@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/text_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/title_size"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:textColor="#00CCFF"
+        android:text="@string/pause"
+         />
+
+    <TextView
+        android:id="@+id/play_btn"
+        android:layout_width="@dimen/btn_size_pause"
+        android:layout_height="@dimen/btn_size_pause"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/text_pause"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_play"/>
+        />
+
+    <TextView
+        android:id="@+id/reset_btn"
+        android:layout_width="@dimen/btn_size_pause"
+        android:layout_height="@dimen/btn_size_pause"
+        android:background="@drawable/btn_restart"
+        android:layout_toRightOf="@+id/play_btn"
+        android:layout_below="@id/text_pause"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/exit_btn"
+        android:layout_width="@dimen/btn_size_pause"
+        android:layout_height="@dimen/btn_size_pause"
+        android:background="@drawable/btn_exit"
+        android:layout_toRightOf="@+id/reset_btn"
+        android:layout_below="@id/text_pause"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"/>
+    />
+
+</RelativeLayout>
