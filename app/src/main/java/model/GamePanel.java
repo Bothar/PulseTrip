@@ -229,10 +229,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         for (int i = 0; i < bonus.size(); i++) {
              bonus.get(i).update();
 
+            //removing bonus items out of screen
              if (bonus.get(i).getX() < -bonus.get(i).getWidth()) {
                 bonus.remove(i);
             }
 
+            //Cheking collision with bonus items
             if (collision(bonus.get(i), player)) {
                 bonus.remove(i);
                 if (speed < -10) speed ++;
